@@ -61,16 +61,39 @@
 <header id="blok-02-navbar" class="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b-2 border-amber-500 shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
-        <!-- Logo & Nama Brand -->
-        <a href="#" class="flex items-center gap-3">
-            <div class="w-11 h-11 rounded-lg bg-amber-500 flex items-center justify-center text-slate-950 font-display font-black text-xl shadow-md">
-                <i class="fa-solid fa-snowplow"></i>
+        <!-- --- START: LOGO RESMI ANTRACK TZCO --- -->
+        <a href="#" class="flex items-center gap-3 group">
+            <!-- Mode 1: Otomatis tampil jika Anda mengunggah file bernama logo.jpg ke GitHub -->
+            <img src="logo.jpg" alt="Logo ANTRACK TZCO" class="h-12 w-auto object-contain rounded bg-white px-1 py-0.5 shadow-md" onerror="this.style.display='none'; document.getElementById('logo-vector-tzco').style.display='flex';">
+
+            <!-- Mode 2: Logo Vector HD ANTRACK TZCO (Tampil otomatis jika file logo.jpg belum diupload) -->
+            <div id="logo-vector-tzco" style="display:none;" class="items-center bg-white border-2 border-slate-800 px-3 py-1.5 rounded shadow-md">
+                <!-- Ikon Segitiga Merah-Hitam AN TRACK -->
+                <div class="flex flex-col items-center mr-3">
+                    <svg class="w-8 h-7" viewBox="0 0 100 85" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Sisi Merah Kiri & Bawah -->
+                        <path d="M45 8 L12 68 L35 68 L52 36 Z" fill="#dc2626"/>
+                        <path d="M18 72 L68 72 L52 42 L42 60 L25 60 Z" fill="#dc2626"/>
+                        <!-- Garis Hitam Kanan -->
+                        <path d="M55 18 L85 72 L72 72 L48 28 Z" fill="#0f172a"/>
+                        <path d="M65 18 L93 70" stroke="#0f172a" stroke-width="4"/>
+                    </svg>
+                    <span class="text-[7px] font-black tracking-tighter leading-none mt-0.5 text-slate-900"><b class="text-red-600">AN</b> TRACK</span>
+                </div>
+                <!-- Blok Miring Hitam-Merah TZCO -->
+                <div class="flex items-center transform -skew-x-12 bg-slate-950 pl-3 pr-0 py-1">
+                    <span class="font-display font-black text-white text-base sm:text-lg tracking-wider transform skew-x-12 pr-2 leading-none">TZCO</span>
+                    <div class="w-2.5 h-6 bg-red-600"></div>
+                </div>
             </div>
-            <div>
-                <span class="font-display font-black text-lg sm:text-xl tracking-wider text-white block leading-none">ANTRACK <span class="text-amber-500">TZCO</span></span>
-                <span class="text-[11px] font-bold tracking-widest text-slate-400 uppercase">Cabang Palembang</span>
+
+            <!-- Keterangan Cabang -->
+            <div class="hidden sm:block border-l border-slate-700 pl-3">
+                <span class="font-display font-bold text-xs text-white block leading-tight">DEALER RESMI</span>
+                <span class="text-[11px] font-extrabold tracking-widest text-amber-500 uppercase">Cabang Palembang</span>
             </div>
         </a>
+        <!-- --- END: LOGO RESMI ANTRACK TZCO --- -->
 
         <!-- Navigasi Desktop -->
         <nav class="hidden md:flex items-center gap-8 text-sm font-bold text-slate-300">
