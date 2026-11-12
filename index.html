@@ -115,9 +115,9 @@
 
         <!-- Tombol Call to Action Cepat -->
         <div class="flex items-center gap-3">
-            <a href="javascript:void(0)" onclick="window.hubungiKami('Halo Admin ANTRACK TZCO Palembang, saya ingin konsultasi unit alat berat.')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2 shadow-md">
-                <i class="fa-brands fa-whatsapp text-base"></i>
-                <span>Hubungi Sales</span>
+            <a href="javascript:void(0)" onclick="window.hubungiKami('')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs sm:text-sm px-4 py-2.5 rounded-lg transition flex items-center gap-2 shadow-md">
+                <i class="fa-solid fa-comments text-base"></i>
+                <span>Live Chat AI</span>
             </a>
         </div>
 
@@ -320,15 +320,54 @@
 
 
 <!-- ========================================================= -->
-<!-- [08] START: TOMBOL FLOATING WHATSAPP                      -->
+<!-- [08] START: TAMPILAN WEB CHAT (ASISTEN AI)                -->
 <!-- ========================================================= -->
-<div id="blok-08-floating-wa" class="fixed bottom-5 right-5 z-50">
-    <button onclick="window.hubungiKami('Halo Admin ANTRACK TZCO , saya tertarik menanyakan katalog alat berat.')" class="bg-emerald-500 hover:bg-emerald-400 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-3xl transition transform hover:scale-105" title="Chat WhatsApp Sekarang">
-        <i class="fa-brands fa-whatsapp"></i>
+<!-- Tombol Floating Chat -->
+<div id="btn-floating-chat" class="fixed bottom-5 right-5 z-50">
+    <button onclick="window.toggleChatWeb()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-2xl transition transform hover:scale-105" title="Buka Live Chat">
+        <i class="fa-solid fa-comments"></i>
     </button>
 </div>
+
+<!-- Kotak Window Live Chat -->
+<div id="window-chat-web" class="fixed bottom-24 right-5 z-50 w-80 sm:w-96 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex-col hidden overflow-hidden transition-all duration-300">
+    <!-- Header Chat -->
+    <div class="bg-slate-950 border-b border-slate-800 p-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 text-lg">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+                <h4 class="font-display font-bold text-white text-sm leading-tight">Asisten AI ANTRACK</h4>
+                <span class="text-xs text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span> Online</span>
+            </div>
+        </div>
+        <button onclick="window.toggleChatWeb()" class="text-slate-400 hover:text-white transition">
+            <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+    </div>
+    
+    <!-- Body Chat -->
+    <div id="chat-body" class="p-4 h-72 overflow-y-auto flex flex-col gap-3 bg-slate-800/50">
+        <!-- Bubble AI (Pesan Pembuka) -->
+        <div class="flex gap-2">
+            <div class="w-6 h-6 rounded-full bg-amber-500 flex-shrink-0 flex items-center justify-center text-slate-950 text-xs mt-1"><i class="fa-solid fa-robot"></i></div>
+            <div class="bg-slate-700 text-slate-200 text-sm p-3 rounded-r-xl rounded-bl-xl shadow-sm border border-slate-600">
+                Halo! Saya Asisten AI ANTRACK TZCO. Ada yang bisa saya bantu terkait ketersediaan alat berat atau penawaran harga hari ini?
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer / Input Chat -->
+    <div class="p-3 bg-slate-950 border-t border-slate-800 flex items-center gap-2">
+        <input type="text" id="inp-chat-user" placeholder="Ketik pesan Anda di sini..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-amber-500 outline-none" onkeypress="if(event.key === 'Enter') window.kirimPesanChat()">
+        <button onclick="window.kirimPesanChat()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 w-10 h-10 rounded-lg flex items-center justify-center transition shrink-0">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
 <!-- ========================================================= -->
-<!-- [08] END: TOMBOL FLOATING WHATSAPP                        -->
+<!-- [08] END: TAMPILAN WEB CHAT (ASISTEN AI)                  -->
 <!-- ========================================================= -->
 
 
@@ -440,17 +479,90 @@
         window.renderKatalog(kategori);
     };
 
-    // --- 09.E: FUNGSI REDIRECT WHATSAPP OTOMATIS ---
+    // --- 09.E: MESIN WEB CHAT (ASISTEN AI) ---
+    // 1. Fungsi Buka/Tutup Chat
+    window.toggleChatWeb = function() {
+        const chatWindow = document.getElementById("window-chat-web");
+        if(chatWindow.classList.contains("hidden")) {
+            chatWindow.classList.remove("hidden");
+            chatWindow.classList.add("flex");
+            document.getElementById("inp-chat-user").focus();
+        } else {
+            chatWindow.classList.add("hidden");
+            chatWindow.classList.remove("flex");
+        }
+    };
+
+    // 2. Fungsi Jembatan (Membelokkan tombol WA lama ke Web Chat)
     window.hubungiKami = function(pesan) {
-        const url = `https://wa.me/${NOMOR_WA_SALES}?text=${encodeURIComponent(pesan)}`;
-        window.open(url, "_blank");
+        window.toggleChatWeb();
+        if(pesan) {
+            document.getElementById("inp-chat-user").value = pesan;
+        }
     };
 
     window.kirimFormPenawaran = function() {
         const nama = document.getElementById("inpNamaTamu").value.trim() || "Calon Pembeli";
-        const unit = document.getElementById("inpUnitTamu").value.trim() || "Unit Alat Berat ANTRACK TZCO";
-        const pesan = `Halo Admin ANTRACK TZCO,\n\nSaya *${nama}* ingin meminta penawaran harga resmi untuk unit: *${unit}*.\n\nMohon informasi lebih lanjut. Terima kasih.`;
+        const unit = document.getElementById("inpUnitTamu").value.trim() || "Unit Alat Berat";
+        const pesan = `Halo, saya ${nama}. Saya tertarik dengan ${unit}. Boleh minta detail harganya?`;
         window.hubungiKami(pesan);
+    };
+
+    // 3. Otak Asisten AI & Rendering Percakapan
+    window.kirimPesanChat = function() {
+        const inputEl = document.getElementById("inp-chat-user");
+        const msg = inputEl.value.trim();
+        if(!msg) return;
+
+        const chatBody = document.getElementById("chat-body");
+        
+        // Render Pesan User (Pengunjung)
+        chatBody.innerHTML += `
+            <div class="flex gap-2 justify-end">
+                <div class="bg-amber-500 text-slate-950 text-sm p-3 rounded-l-xl rounded-br-xl shadow-sm font-medium">
+                    ${msg}
+                </div>
+            </div>`;
+        inputEl.value = "";
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Render Efek Mengetik AI (Delay 0.5 detik)
+        setTimeout(() => {
+            const typingId = "typing-" + Date.now();
+            chatBody.innerHTML += `
+                <div id="${typingId}" class="flex gap-2">
+                    <div class="w-6 h-6 rounded-full bg-amber-500 flex-shrink-0 flex items-center justify-center text-slate-950 text-xs mt-1"><i class="fa-solid fa-robot"></i></div>
+                    <div class="bg-slate-700 text-slate-400 text-xs p-3 rounded-r-xl rounded-bl-xl italic">Sedang mengetik balasan...</div>
+                </div>`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            // Render Jawaban AI (Delay 1.5 detik)
+            setTimeout(() => {
+                document.getElementById(typingId).remove();
+                
+                // --- Logika Pendeteksi Kata Kunci (AI Sederhana) ---
+                let teksPesan = msg.toLowerCase();
+                let balasanAI = "Terima kasih atas pesan Anda. Agar tim *Sales Representative* kami dapat melayani Anda secara maksimal, mohon tinggalkan nomor WhatsApp atau alamat Email Anda di sini.";
+                
+                if(teksPesan.includes("harga") || teksPesan.includes("price") || teksPesan.includes("pricelist")) {
+                    balasanAI = "Tentu! Untuk memberikan estimasi penawaran harga yang akurat (termasuk ongkos kirim unit), bolehkah kami mengetahui lokasi proyek/site Anda saat ini? Silakan tinggalkan juga nomor WhatsApp Anda.";
+                } else if(teksPesan.includes("katalog") || teksPesan.includes("brosur") || teksPesan.includes("detail")) {
+                    balasanAI = "Siap! Kami memiliki brosur PDF spesifikasi teknis lengkap untuk unit tersebut. Mohon ketikkan alamat Email atau nomor WhatsApp Anda agar sistem kami dapat segera mengirimkannya.";
+                } else if(teksPesan.includes("halo") || teksPesan.includes("pagi") || teksPesan.includes("siang")) {
+                    balasanAI = "Halo! Selamat datang di layanan Live Chat ANTRACK TZCO Palembang. Ada unit khusus yang sedang Anda cari?";
+                }
+
+                // Cetak Balasan
+                chatBody.innerHTML += `
+                    <div class="flex gap-2">
+                        <div class="w-6 h-6 rounded-full bg-amber-500 flex-shrink-0 flex items-center justify-center text-slate-950 text-xs mt-1"><i class="fa-solid fa-robot"></i></div>
+                        <div class="bg-slate-700 text-slate-200 text-sm p-3 rounded-r-xl rounded-bl-xl shadow-sm border border-slate-600">
+                            ${balasanAI}
+                        </div>
+                    </div>`;
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }, 1500);
+        }, 500);
     };
 
     // Jalankan render pertama kali saat halaman selesai dimuat
