@@ -347,31 +347,31 @@
 
 
 <!-- ========================================================= -->
-<!-- [08] START: TAMPILAN WEB CHAT (ASISTEN AI)                -->
-<!-- ========================================================= -->
-<!-- Tombol Floating Chat -->
-<div id="btn-floating-chat" class="fixed bottom-5 right-5 z-50">
-    <button onclick="window.toggleChatWeb()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-2xl transition transform hover:scale-105" title="Buka Live Chat">
-        <i class="fa-solid fa-comments"></i>
-    </button>
-</div>
-
-<!-- Kotak Window Live Chat -->
-<div id="window-chat-web" class="fixed bottom-24 right-5 z-50 w-80 sm:w-96 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex-col hidden overflow-hidden transition-all duration-300">
-    <!-- Header Chat -->
-    <div class="bg-slate-950 border-b border-slate-800 p-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 text-lg">
-                <i class="fa-solid fa-robot"></i>
+    <!-- [08.A] START: MODAL SPESIFIKASI (POP-UP)                  -->
+    <!-- ========================================================= -->
+    <div id="modal-spek" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 transition-opacity">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden relative">
+            <!-- Header Modal -->
+            <div class="bg-slate-950 border-b border-slate-800 p-4 sm:p-5 flex justify-between items-center">
+                <h3 id="modal-judul" class="text-white font-display font-extrabold text-lg sm:text-xl">Spesifikasi Unit</h3>
+                <button onclick="document.getElementById('modal-spek').classList.add('hidden')" class="text-slate-400 hover:text-white transition bg-slate-800 hover:bg-slate-700 rounded-full w-8 h-8 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
-            <div>
-                <h4 class="font-display font-bold text-white text-sm leading-tight">Asisten AI ANTRACK</h4>
-                <span class="text-xs text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span> Online</span>
+            <!-- Body Modal -->
+            <div class="p-5 sm:p-6 overflow-y-auto max-h-[60vh]">
+                <div id="modal-konten" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                    <!-- Data Spesifikasi Akan Disuntik di Sini oleh JS -->
+                </div>
+            </div>
+            <!-- Footer Modal -->
+            <div class="bg-slate-950 border-t border-slate-800 p-4 sm:p-5 flex flex-col sm:flex-row gap-3 justify-end items-center">
+                <span class="text-slate-400 text-xs text-center sm:text-left">Dapatkan penawaran harga terbaik hari ini.</span>
+                <button onclick="document.getElementById('modal-spek').classList.add('hidden'); window.hubungiKami('Halo, saya sudah melihat spesifikasi ' + document.getElementById('modal-judul').innerText + '. Boleh minta estimasi harganya?')" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-6 py-2.5 rounded-lg transition shadow-md flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-comments"></i> Nego Harga
+                </button>
             </div>
         </div>
-        <button onclick="window.toggleChatWeb()" class="text-slate-400 hover:text-white transition">
-            <i class="fa-solid fa-xmark text-xl"></i>
-        </button>
     </div>
     
     <!-- Body Chat -->
@@ -409,12 +409,25 @@
     const DATA_KATALOG_UNIT = [
         {
             id: "UNIT-01",
-            nama: "TZCO Excavator TZ 60",
+            nama: "TZCO Excavator TZ 60 (60EXD)",
             kategori: "EXCAVATOR",
             kapasitas: "Kelas 6 Ton | Bucket 0.23 m³",
             tenaga: "36.2 kW / 2100 rpm",
             gambar: "tzco60.jpg",
-            status: "Ready Stock "
+            status: "Ready Stock Palembang",
+            spekLengkap: {
+                "Model Unit": "TZCO 60EXD",
+                "Operating Weight": "6.150 Kg",
+                "Kapasitas Bucket": "0.23 m³",
+                "Mesin (Engine)": "Yanmar 4TNV94L",
+                "Tenaga Mesin": "36.2 kW / 48 HP",
+                "Kecepatan Jalan": "2.4 - 4.1 km/jam",
+                "Tinggi Galian Maksimal": "5.760 mm",
+                "Kedalaman Galian Maks": "3.815 mm",
+                "Kapasitas Tangki Solar": "110 Liter",
+                "Kapasitas Oli Hidrolik": "90 Liter",
+                "Dimensi (P x L x T)": "5.955 x 1.940 x 2.550 mm"
+            }
         },
         {
             id: "UNIT-02",
@@ -423,9 +436,30 @@
             kapasitas: "Kelas 8 Ton | Bucket 0.32 m³",
             tenaga: "44.4 kW / 2100 rpm",
             gambar: "tzco80.jpg",
-            status: "Ready Stock "
+            status: "Ready Stock Palembang",
+            spekLengkap: {
+                "Model Unit": "TZCO 80",
+                "Operating Weight": "8.000 Kg (Estimasi Kelas 8T)",
+                "Kapasitas Bucket": "0.32 m³",
+                "Mesin (Engine)": "Standar Pabrikan",
+                "Tenaga Mesin": "44.4 kW / 2100 rpm",
+                "Status Brosur": "Menunggu Pembaruan Data"
+            }
         }
     ];
+
+    // Otak Pemanggil Modal Spesifikasi
+    window.bukaSpek = function(id) {
+        const unit = DATA_KATALOG_UNIT.find(u => u.id === id);
+        if(!unit) return;
+        document.getElementById('modal-judul').innerText = unit.nama;
+        let htmlSpek = "";
+        for (const [key, value] of Object.entries(unit.spekLengkap)) {
+            htmlSpek += `<div class="bg-slate-800/50 p-3 rounded-lg border border-slate-700/50"><div class="text-xs text-slate-400 mb-1">${key}</div><div class="text-sm font-bold text-white">${value}</div></div>`;
+        }
+        document.getElementById('modal-konten').innerHTML = htmlSpek;
+        document.getElementById('modal-spek').classList.remove('hidden');
+    };
 
     // --- 09.C: FUNGSI RENDER KATALOG KE LAYAR ---
     window.renderKatalog = function(kategoriFilter = "SEMUA") {
@@ -466,10 +500,10 @@
                     </div>
                 </div>
                 <div class="p-5 pt-0">
-                    <button onclick="window.hubungiKami('Halo Admin ANTRACK TZCO, mohon info harga & spesifikasi lengkap untuk unit: ${unit.nama}')" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs uppercase py-3 rounded-xl transition flex items-center justify-center gap-2">
-                        <i class="fa-brands fa-whatsapp text-base"></i> Minta Penawaran Harga
-                    </button>
-                </div>
+                    <div class="flex flex-col gap-2 mt-4">
+                        <button onclick="window.bukaSpek('${unit.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm py-2.5 rounded-lg transition border border-slate-600 shadow-sm"><i class="fa-solid fa-list text-amber-500"></i> Lihat Spesifikasi</button>
+                        <button onclick="window.hubungiKami('Halo, saya tertarik dengan ${unit.nama}. Boleh minta penawaran harganya?')" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm py-2.5 rounded-lg transition shadow-md"><i class="fa-solid fa-comments"></i> Nego Harga (AI Chat)</button>
+                    </div>
             </div>`;
         });
 
