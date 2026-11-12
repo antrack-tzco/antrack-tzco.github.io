@@ -175,12 +175,12 @@
     </div>
 
     <!-- Tombol Filter Kategori -->
-    <div id="filter-container" class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10">
-        <button onclick="window.filterKatalog('SEMUA', this)" class="btn-filter bg-amber-500 text-slate-950 font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition">Semua Unit</button>
-        <button onclick="window.filterKatalog('EXCAVATOR', this)" class="btn-filter bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg border border-slate-700 transition">Excavator</button>
-        <button onclick="window.filterKatalog('BULLDOZER', this)" class="btn-filter bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg border border-slate-700 transition">Bulldozer</button>
-        <button onclick="window.filterKatalog('LOADER', this)" class="btn-filter bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg border border-slate-700 transition">Wheel Loader</button>
-    </div>
+            <div class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 sm:mb-12">
+                <button onclick="window.filterKatalog('SEMUA')" id="btn-filter-SEMUA" class="px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all duration-300 bg-amber-500 text-slate-950 shadow-md">Semua Unit</button>
+                <button onclick="window.filterKatalog('EXCAVATOR')" id="btn-filter-EXCAVATOR" class="px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all duration-300 bg-slate-900 text-slate-400 hover:text-white border border-slate-700 hover:border-amber-500 hover:bg-slate-800">Excavator</button>
+                <button onclick="window.filterKatalog('ACCESORIES')" id="btn-filter-ACCESORIES" class="px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all duration-300 bg-slate-900 text-slate-400 hover:text-white border border-slate-700 hover:border-amber-500 hover:bg-slate-800">Accesories Unit</button>
+                <button onclick="window.filterKatalog('WORKSHOP')" id="btn-filter-WORKSHOP" class="px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all duration-300 bg-slate-900 text-slate-400 hover:text-white border border-slate-700 hover:border-amber-500 hover:bg-slate-800">Workshop</button>
+            </div>
 
     <!-- Grid Tempat Kartu Katalog Dirender oleh JavaScript -->
     <div id="katalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
