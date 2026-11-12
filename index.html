@@ -22,7 +22,6 @@
     <meta property="og:url" content="https://antrack-tzco.github.io/">
     <!-- END: SEO & META TAGS GOOGLE -->
     <!-- ========================================================= -->
-    <meta name="description" content="Pusat penjualan, sewa, dan suku cadang alat berat resmi ANTRACK TZCO , Sumatera - Indonesia. Tangguh, Handal, dan Bergaransi.">
     <meta name="theme-color" content="#0f172a">
 
     <!-- Google Fonts: Plus Jakarta Sans & Orbitron -->
@@ -118,6 +117,7 @@
                 <span class="text-[11px] font-extrabold tracking-widest text-amber-500 uppercase">Sumatera Indonesia</span>
             </div>
             <!-- --- END: IDENTITAS SUPPLIER RESMI --- -->
+        </a>
 
         <!-- Navigasi Desktop -->
         <nav class="hidden md:flex items-center gap-8 text-sm font-bold text-slate-300">
@@ -174,7 +174,7 @@
                 <a href="#blok-04-katalog" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-6 py-3.5 rounded-xl transition flex items-center gap-2 shadow-lg shadow-amber-500/20">
                     <i class="fa-solid fa-layer-group"></i> Lihat Katalog Unit
                 </a>
-                <a href="#blok-06-kontak" class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 font-bold px-6 py-3.5 rounded-xl transition flex items-center gap-2">
+                <a href="#blok-06-kontak" style="display:none;" class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 font-bold px-6 py-3.5 rounded-xl transition flex items-center gap-2">
                     <i class="fa-solid fa-location-dot text-amber-500"></i> Kunjungi Showroom
                 </a>
             </div>
@@ -268,7 +268,7 @@
 <!-- ========================================================= -->
 <!-- [06] START: KONTAK & LOKASI SHOWROOM                      -->
 <!-- ========================================================= -->
-<section id="blok-06-kontak" class="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<section id="blok-06-kontak" style="display:none;" class="py-16 lg:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="bg-slate-800/80 border border-slate-700 rounded-2xl p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         
         <div>
@@ -374,7 +374,40 @@
         </div>
     </div>
     
-    <!-- Body Chat -->
+    <!-- ========================================================= -->
+    <!-- [08.A] END: MODAL SPESIFIKASI (POP-UP)                    -->
+    <!-- ========================================================= -->
+
+
+    <!-- ========================================================= -->
+    <!-- [08] START: TAMPILAN WEB CHAT (ASISTEN AI)                -->
+    <!-- ========================================================= -->
+    <!-- Tombol Floating Chat di Pojok Kanan Bawah -->
+    <div id="btn-floating-chat" class="fixed bottom-5 right-5 z-50">
+        <button onclick="window.toggleChatWeb()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 w-14 h-14 rounded-full shadow-xl flex items-center justify-center text-2xl transition transform hover:scale-105 cursor-pointer" title="Buka Live Chat">
+            <i class="fa-solid fa-comments"></i>
+        </button>
+    </div>
+
+    <!-- Kotak Window Live Chat -->
+    <div id="window-chat-web" class="fixed bottom-24 right-5 z-50 w-80 sm:w-96 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex-col hidden overflow-hidden transition-all duration-300">
+        <!-- Header Chat -->
+        <div class="bg-slate-950 border-b border-slate-800 p-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-slate-950 text-lg">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div>
+                    <h4 class="font-display font-bold text-white text-sm leading-tight">Asisten AI ANTRACK</h4>
+                    <span class="text-xs text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span> Online</span>
+                </div>
+            </div>
+            <button onclick="window.toggleChatWeb()" class="text-slate-400 hover:text-white transition cursor-pointer">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Body Chat -->
     <div id="chat-body" class="p-4 h-72 overflow-y-auto flex flex-col gap-3 bg-slate-800/50">
         <!-- Bubble AI (Pesan Pembuka) -->
         <div class="flex gap-2">
@@ -471,13 +504,24 @@
             dataTampil = DATA_KATALOG_UNIT.filter(item => item.kategori === kategoriFilter);
         }
 
+        // Jika kategori belum ada isinya (misal Workshop / Accesories belum diisi foto)
+        if (dataTampil.length === 0) {
+            grid.innerHTML = `
+                <div class="col-span-full text-center py-12 bg-slate-900/50 border border-slate-800 rounded-2xl">
+                    <i class="fa-solid fa-screwdriver-wrench text-amber-500 text-3xl mb-3"></i>
+                    <p class="text-white font-bold text-base">Data Kategori ${kategoriFilter} Sedang Diperbarui</p>
+                    <p class="text-slate-400 text-xs mt-1">Silakan hubungi Live Chat AI kami untuk informasi ketersediaan terbaru.</p>
+                </div>`;
+            return;
+        }
+
         let html = "";
         dataTampil.forEach(unit => {
             html += `
-            <div class="bg-slate-800/90 border border-slate-700 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-amber-500 transition shadow-lg">
+            <div class="bg-slate-800/90 border border-slate-700 rounded-2xl overflow-hidden flex flex-col justify-between hover:border-amber-500 transition shadow-lg group">
                 <div>
                     <div class="relative h-52 bg-slate-900 overflow-hidden">
-                        <img src="${unit.gambar}" alt="Jual ${unit.nama} Palembang - ANTRACK TZCO Sumatera"
+                        <img src="${unit.gambar}" alt="Jual ${unit.nama} Palembang - ANTRACK TZCO Sumatera" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         <span class="absolute top-3 left-3 bg-slate-950/80 text-amber-400 border border-amber-500/40 text-[11px] font-extrabold px-2.5 py-1 rounded-md uppercase">
                             ${unit.kategori}
                         </span>
@@ -501,9 +545,10 @@
                 </div>
                 <div class="p-5 pt-0">
                     <div class="flex flex-col gap-2 mt-4">
-                        <button onclick="window.bukaSpek('${unit.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm py-2.5 rounded-lg transition border border-slate-600 shadow-sm"><i class="fa-solid fa-list text-amber-500"></i> Lihat Spesifikasi</button>
-                        <button onclick="window.hubungiKami('Halo, saya tertarik dengan ${unit.nama}. Boleh minta penawaran harganya?')" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm py-2.5 rounded-lg transition shadow-md"><i class="fa-solid fa-comments"></i> Nego Harga (AI Chat)</button>
+                        <button onclick="window.bukaSpek('${unit.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs sm:text-sm py-2.5 rounded-lg transition border border-slate-600 shadow-sm cursor-pointer"><i class="fa-solid fa-list text-amber-500 mr-1"></i> Lihat Spesifikasi</button>
+                        <button onclick="window.hubungiKami('Halo, saya tertarik dengan ${unit.nama}. Boleh minta penawaran harganya?')" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm py-2.5 rounded-lg transition shadow-md cursor-pointer"><i class="fa-solid fa-comments mr-1"></i> Nego Harga (AI Chat)</button>
                     </div>
+                </div>
             </div>`;
         });
 
@@ -512,13 +557,18 @@
     };
 
     // --- 09.D: FUNGSI TOMBOL FILTER KATEGORI ---
-    window.filterKatalog = function(kategori, btnElement) {
-        document.querySelectorAll(".btn-filter").forEach(btn => {
-            btn.className = "btn-filter bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg border border-slate-700 transition";
+    window.filterKatalog = function(kategori) {
+        const daftarKategori = ['SEMUA', 'EXCAVATOR', 'ACCESORIES', 'WORKSHOP'];
+        daftarKategori.forEach(kat => {
+            const btn = document.getElementById('btn-filter-' + kat);
+            if (btn) {
+                if (kat === kategori) {
+                    btn.className = "px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all duration-300 bg-amber-500 text-slate-950 shadow-md";
+                } else {
+                    btn.className = "px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-xs sm:text-sm font-bold transition-all duration-300 bg-slate-900 text-slate-400 hover:text-white border border-slate-700 hover:border-amber-500 hover:bg-slate-800";
+                }
+            }
         });
-        if (btnElement) {
-            btnElement.className = "btn-filter bg-amber-500 text-slate-950 font-extrabold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition";
-        }
         window.renderKatalog(kategori);
     };
 
