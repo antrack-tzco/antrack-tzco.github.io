@@ -461,7 +461,10 @@
         window.renderKatalog(kategori);
     };
 
-    // --- 09.E: MESIN WEB CHAT (ASISTEN AI) ---
+    // --- 09.E: MESIN WEB CHAT (ASISTEN AI) DENGAN AUTO-FORWARD ---
+    window.tahapChat = 0;
+    window.pesanKebutuhan = "";
+
     // 1. Fungsi Buka/Tutup Chat
     window.toggleChatWeb = function() {
         const chatWindow = document.getElementById("window-chat-web");
@@ -475,22 +478,18 @@
         }
     };
 
-    // 2. Fungsi Jembatan (Membelokkan tombol WA lama ke Web Chat)
+    // 2. Fungsi Jembatan
     window.hubungiKami = function(pesan) {
         window.toggleChatWeb();
-        if(pesan) {
-            document.getElementById("inp-chat-user").value = pesan;
-        }
+        if(pesan) document.getElementById("inp-chat-user").value = pesan;
     };
-
     window.kirimFormPenawaran = function() {
         const nama = document.getElementById("inpNamaTamu").value.trim() || "Calon Pembeli";
         const unit = document.getElementById("inpUnitTamu").value.trim() || "Unit Alat Berat";
-        const pesan = `Halo, saya ${nama}. Saya tertarik dengan ${unit}. Boleh minta detail harganya?`;
-        window.hubungiKami(pesan);
+        window.hubungiKami(`Halo, saya ${nama}. Saya tertarik dengan ${unit}. Boleh minta detail harganya?`);
     };
 
-    // 3. Otak Asisten AI & Rendering Percakapan
+    // 3. Otak Asisten AI & Eksekutor WA
     window.kirimPesanChat = function() {
         const inputEl = document.getElementById("inp-chat-user");
         const msg = inputEl.value.trim();
@@ -498,7 +497,7 @@
 
         const chatBody = document.getElementById("chat-body");
         
-        // Render Pesan User (Pengunjung)
+        // Render Pesan User
         chatBody.innerHTML += `
             <div class="flex gap-2 justify-end">
                 <div class="bg-amber-500 text-slate-950 text-sm p-3 rounded-l-xl rounded-br-xl shadow-sm font-medium">
@@ -508,7 +507,7 @@
         inputEl.value = "";
         chatBody.scrollTop = chatBody.scrollHeight;
 
-        // Render Efek Mengetik AI (Delay 0.5 detik)
+        // Render Efek Mengetik AI
         setTimeout(() => {
             const typingId = "typing-" + Date.now();
             chatBody.innerHTML += `
@@ -518,32 +517,58 @@
                 </div>`;
             chatBody.scrollTop = chatBody.scrollHeight;
 
-            // Render Jawaban AI (Delay 1.5 detik)
+            // Logika Respon AI
             setTimeout(() => {
                 document.getElementById(typingId).remove();
                 
-                // --- Logika Pendeteksi Kata Kunci (AI Sederhana) ---
-                let teksPesan = msg.toLowerCase();
-                let balasanAI = "Terima kasih atas pesan Anda. Agar tim *Sales Representative* kami dapat melayani Anda secara maksimal, mohon tinggalkan nomor WhatsApp atau alamat Email Anda di sini.";
-                
-                if(teksPesan.includes("harga") || teksPesan.includes("price") || teksPesan.includes("pricelist")) {
-                    balasanAI = "Tentu! Untuk memberikan estimasi penawaran harga yang akurat (termasuk ongkos kirim unit), bolehkah kami mengetahui lokasi proyek/site Anda saat ini? Silakan tinggalkan juga nomor WhatsApp Anda.";
-                } else if(teksPesan.includes("katalog") || teksPesan.includes("brosur") || teksPesan.includes("detail")) {
-                    balasanAI = "Siap! Kami memiliki brosur PDF spesifikasi teknis lengkap untuk unit tersebut. Mohon ketikkan alamat Email atau nomor WhatsApp Anda agar sistem kami dapat segera mengirimkannya.";
-                } else if(teksPesan.includes("halo") || teksPesan.includes("pagi") || teksPesan.includes("siang")) {
-                    balasanAI = "Halo! Selamat datang di layanan Live Chat ANTRACK TZCO Palembang. Ada unit khusus yang sedang Anda cari?";
-                }
+                if (window.tahapChat === 1) {
+                    // --- TAHAP 2: PENGUNJUNG MEMBERIKAN NOMOR WA ---
+                    chatBody.innerHTML += `
+                        <div class="flex gap-2">
+                            <div class="w-6 h-6 rounded-full bg-amber-500 flex-shrink-0 flex items-center justify-center text-slate-950 text-xs mt-1"><i class="fa-solid fa-robot"></i></div>
+                            <div class="bg-slate-700 text-slate-200 text-sm p-3 rounded-r-xl rounded-bl-xl shadow-sm border border-emerald-500">
+                                <i class="fa-solid fa-check-circle text-emerald-400"></i> Terima kasih! Data Anda sedang kami teruskan ke Admin...
+                            </div>
+                        </div>`;
+                    chatBody.scrollTop = chatBody.scrollHeight;
 
-                // Cetak Balasan
-                chatBody.innerHTML += `
-                    <div class="flex gap-2">
-                        <div class="w-6 h-6 rounded-full bg-amber-500 flex-shrink-0 flex items-center justify-center text-slate-950 text-xs mt-1"><i class="fa-solid fa-robot"></i></div>
-                        <div class="bg-slate-700 text-slate-200 text-sm p-3 rounded-r-xl rounded-bl-xl shadow-sm border border-slate-600">
-                            ${balasanAI}
-                        </div>
-                    </div>`;
-                chatBody.scrollTop = chatBody.scrollHeight;
-            }, 1500);
+                    // EKSEKUSI: Lempar ke WA Admin
+                    setTimeout(() => {
+                        // ---> PERHATIAN: GANTI NOMOR DI BAWAH INI DENGAN NO WA ANDA (Gunakan 62, tanpa 0, tanpa +)
+                        const noWAAdmin = "62887437370444"; 
+                        
+                        const teksKirim = `Halo Admin ANTRACK TZCO Palembang! 🚜\nAda prospek baru dari Live Chat Website.\n\n*Kebutuhan:* ${window.pesanKebutuhan}\n*Kontak Pengunjung:* ${msg}\n\nMohon segera di-follow up!`;
+                        window.open(`https://wa.me/${noWAAdmin}?text=${encodeURIComponent(teksKirim)}`, "_blank");
+
+                        // Reset Chat
+                        window.tahapChat = 0; 
+                        window.pesanKebutuhan = "";
+                    }, 1500);
+
+                } else {
+                    // --- TAHAP 1: AI MENYAPA & MEMINTA NOMOR ---
+                    window.pesanKebutuhan = msg; // Simpan pertanyaan awal pengunjung
+                    window.tahapChat = 1; // Setel ke mode "menunggu nomor WA"
+
+                    let teksPesan = msg.toLowerCase();
+                    let balasanAI = "Terima kasih atas pesannya. Agar tim *Sales Representative* kami dapat merespons dengan cepat, **mohon ketikkan nomor WhatsApp Anda di bawah ini.**";
+                    
+                    if(teksPesan.includes("harga") || teksPesan.includes("price") || teksPesan.includes("pricelist")) {
+                        balasanAI = "Tentu! Untuk memberikan estimasi penawaran harga yang akurat, **silakan tinggalkan nomor WhatsApp Anda di sini**, sistem akan langsung meneruskannya ke Admin.";
+                    } else if(teksPesan.includes("brosur") || teksPesan.includes("detail")) {
+                        balasanAI = "Siap! Kami memiliki brosur PDF spesifikasi teknis lengkapnya. **Mohon ketikkan nomor WhatsApp Anda** agar sistem bisa memproses pengirimannya.";
+                    }
+
+                    chatBody.innerHTML += `
+                        <div class="flex gap-2">
+                            <div class="w-6 h-6 rounded-full bg-amber-500 flex-shrink-0 flex items-center justify-center text-slate-950 text-xs mt-1"><i class="fa-solid fa-robot"></i></div>
+                            <div class="bg-slate-700 text-slate-200 text-sm p-3 rounded-r-xl rounded-bl-xl shadow-sm border border-slate-600">
+                                ${balasanAI}
+                            </div>
+                        </div>`;
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }
+            }, 1000);
         }, 500);
     };
 
